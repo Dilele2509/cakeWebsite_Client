@@ -1,166 +1,204 @@
 /* import lib */
+import { useParams } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
+import axios from '../../../API/axios';
 
 /* import css */
 import '../Product_Details/Product_details.css'
 
-import {AiOutlineRight} from 'react-icons/ai';
+import { AiOutlineRight } from 'react-icons/ai';
 
 function Product_Details() {
-    const initialQuantity = localStorage.getItem('quantity') || '1';
-    const [quantity, setQuantity] = useState(initialQuantity);
+  // State for quantity
+  const [quantity, setQuantity] = useState(1);
   
-    const incrementQuantity = () => {
-      setQuantity(parseInt(quantity, 10) + 1);
-    };
-  
-    const decrementQuantity = () => {
-      if (quantity > 1) {
-        setQuantity(parseInt(quantity, 10) - 1);
-      }
-    };
-  
-    // Save the quantity state to localStorage whenever it changes
-    useEffect(() => {
-      localStorage.setItem('quantity', quantity);
-    }, [quantity]);
+ // State for product, selectedSize, and productPrice
+ const [product, setProduct] = useState({});
+ const [defaultSize, setDefaultSize] = useState(product.size); // Giá trị kích thước mặc định
+ const [selectedSize, setSelectedSize] = useState(null);
+ const [productPrice, setProductPrice] = useState(0);
 
+ // Get productId from URL
+ const { productId } = useParams();
 
-    const [selectedSize, setSelectedSize] = useState(null);
+ // Fetch product data from the API
+ useEffect(() => {
+   axios.post('/product/id/', { id: productId })
+     .then((response) => {
+       console.log('Product Data:', response.data);
+       setProduct(response.data[0]);
+       setDefaultSize(response.data[0].size); // Cập nhật giá trị kích thước mặc định
+       setSelectedSize(response.data[0].size); // Cập nhật kích thước hiện tại
+       setProductPrice(response.data[0].total);
+     })
+     .catch((error) => {
+       console.error('Error fetching product details:', error);
+     });
+ }, [productId]);
 
-    const handleSizeClick = (size) => {
-        setSelectedSize(size);
-    };
-      
-    return ( 
-        <>
-            <div className='main-nav'>
-                <div className='nav-item'>
-                    <a href='/product'>Product <AiOutlineRight/></a>
-                    <div className='nav-pro-name'>item</div>
-                </div>
+ // Handle quantity increment and decrement
+ const incrementQuantity = () => {
+  setQuantity(parseInt(quantity,10) + 1);
+};
+
+ const decrementQuantity = () => {
+  if (quantity > 1) {
+    setQuantity(parseInt(quantity,10) - 1);
+  }
+ };
+
+ // Handle size selection
+ const handleSizeClick = (size) => {
+   axios.put('/product/size/', {
+     id: product.id,
+     size: size
+   })
+     .then((response) => {
+       setSelectedSize(size);
+       setProductPrice(response.data[0].total);
+       console.log('Size updated successfully:', response.data);
+     })
+     .catch((error) => {
+       console.error('Error updating size:', error);
+     });
+ };
+
+ //add cart
+ const handleAddToCart = () => {
+  axios.post('/order-detail/add/', {
+    product_id: product.id,
+    product_size: product.size,
+    price: productPrice,
+    quantity: quantity
+  })
+  .then((response) => {
+    // Hiển thị thông báo thành công bằng alert
+    window.alert('Order added successfully');
+
+    // Xử lý phản hồi từ backend (nếu cần)
+    console.log('Order detail added successfully:', response.data);
+  })
+  .catch((error) => {
+    // Hiển thị thông báo lỗi bằng alert
+    window.alert('Error adding order detail');
+
+    console.error('Error adding order detail:', error);
+  });
+};
+
+  return (
+    <>
+      <div className='main-nav'>
+        <div className='nav-item'>
+          <a href='/product/all'>Product <AiOutlineRight/></a>
+          <div className='nav-pro-name'>{product.title}</div>
+        </div>
+      </div>
+      <div className='container item-container'>
+        <div className='_2-col-grid item-page'>
+          <div className='img-detail-wrap'>
+            <div className='item-img'>
+              <img className='background-img set-img' src={product.thumbnail} alt={product.title}></img>
             </div>
-            <div className='container item-container'>
-                <div className='_2-col-grid item-page'>
-                    <div className='img-detail-wrap'>
-                        <div className='item-img'>
-                            <div className='background-img set-img'></div>
-                        </div>
-                        <div className='item-nutrition'>
-                            <div className='nutrition-header'>
-                                INGREDIENT
-                            </div>
-                        </div>
-                        <p className='menu-item-ingredient'>
-                        Bread dough(wheat flour, water, margarine, whole egg, sugar, mixed skim milk powder, yeast, whipping cream, sea salt, bread improver, yeast, skimmed milk powder), Butter cream, Egg wash(egg, water)Bread dough(wheat flour, water, margarine, whole egg, sugar, mixed skim milk powder, yeast, whipping cream, sea salt, bread improver, yeast, skimmed milk powder), Butter cream, Egg wash(egg, water)
-                        </p>
-                    </div>
-                    <div className='func-wrap'>
-                        <h1 className='func-item-name'>Item's Name</h1>
-                        <div className='space-div'></div>
-                        <h4 className='func-item-price'>$150</h4>
-                        <div className='detail-content'>
-                            <div className='status-detail'>
-                                Status: Available
-                            </div>
-                            <div className='menu-item-ingredient'>
-                            2,000 Calories a day is used for general nutrition advice, but calorie needs may vary. Additional nutritional information available upon request. Customization of your order may impact the accuracy and/or completeness of the available nutritional information. Allergen and Nutrition Information
-                            </div>
-                        </div>
-                        <div className='space-div'></div>
-                        <div className='func-choosing _2-col-grid'>
-                            <div className='choosing-form'>
-                                <form id='product-form' action='' method='get' className='quant-num-cart'>
-                                    <button className='quant-minus' onClick={decrementQuantity}>
-                                        <span>-</span>
-                                    </button>
-                                    <input type='text' value={quantity} name='quantity' className='quantity' readOnly></input>
-                                    <button className='quant-plus' onClick={incrementQuantity}>
-                                        <span>+</span>
-                                    </button>
+            <div className='item-nutrition'>
+              <div className='nutrition-header'>
+                INGREDIENT
+              </div>
+            </div>
+            <p className='menu-item-ingredient'>
+              {product.ingredients}
+            </p>
+          </div>
+          <div className='func-wrap'>
+            <h1 className='func-item-name'>{product.title}</h1>
+            <div className='space-div'></div>
+            <h4 className='func-item-price'>${productPrice}</h4>
+            <div className='detail-content'>
+              {product.quantity > 0 ? (
+                <div className='status-detail'>
+                  Status: Available
+                </div>
+              ) : (
+                <div className='status-detail'>
+                  Status: Sold Out
+                </div>
+              )}
+              <div className='menu-item-ingredient'>
+                {product.description}
+              </div>
+            </div>
+            <div className='space-div'></div>
+            <div className='func-choosing _2-col-grid'>
+              <div className='choosing-form'>
+                <form id='product-form' action='' method='get' className='quant-num-cart'>
+                <button 
+                  className='quant-minus'
+                  onClick={(e) => {
+                    e.preventDefault(); // Ngăn chặn sự kiện mặc định của nút
+                    decrementQuantity();
+                  }}
+                >
+                  <span>-</span>
+                </button>
 
-                                    <div className='choose-size'>
-      <div className='selection-form'>
-        <h4 className='func-choose-title'>Size</h4>
-        <div className='func-item-size'>
-          <div className='size-option'>
-            <input
-              className='option'
-              id='op-16'
-              type='radio'
-              name='option1'
-              value='16cm'
-              checked={selectedSize === '16cm'}
-              onChange={() => handleSizeClick('16cm')}
-            />
-            <label htmlFor='op-16'>
-              16cm
-              <img
-                className='img-check'
-                src='https://theme.hstatic.net/1000348721/1000449307/14/select-pro.png?v=566'
-                style={{ display: selectedSize === '16cm' ? 'block' : 'none' }}
-                onClick={() => handleSizeClick('16cm')}
-              />
-            </label>
-          </div>
-          <div className='size-option'>
-            <input
-              className='option'
-              id='op-18'
-              type='radio'
-              name='option2'
-              value='18cm'
-              checked={selectedSize === '18cm'}
-              onChange={() => handleSizeClick('18cm')}
-            />
-            <label htmlFor='op-18'>
-              18cm
-              <img
-                className='img-check'
-                src='https://theme.hstatic.net/1000348721/1000449307/14/select-pro.png?v=566'
-                style={{ display: selectedSize === '18cm' ? 'block' : 'none' }}
-                onClick={() => handleSizeClick('18cm')}
-              />
-            </label>
-          </div>
-          <div className='size-option'>
-            <input
-              className='option'
-              id='op-24'
-              type='radio'
-              name='option3'
-              value='24cm'
-              checked={selectedSize === '24cm'}
-              onChange={() => handleSizeClick('24cm')}
-            />
-            <label htmlFor='op-24'>
-              24cm
-              <img
-                className='img-check'
-                src='https://theme.hstatic.net/1000348721/1000449307/14/select-pro.png?v=566'
-                style={{ display: selectedSize === '24cm' ? 'block' : 'none' }}
-                onClick={() => handleSizeClick('24cm')}
-              />
-            </label>
+                <input type='text' value={quantity} name='quantity' className='quantity' readOnly></input>
+
+                <button
+                  className='quant-plus'
+                  onClick={(e) => {
+                    e.preventDefault(); // Ngăn chặn sự kiện mặc định của nút
+                    incrementQuantity();
+                  }}
+                >
+                  <span>+</span>
+                </button>
+
+                  <div className='choose-size'>
+                    <div className='selection-form'>
+                      <h4 className='func-choose-title'>Size</h4>
+                      <div className='func-item-size'>
+                      <div className='size-option'>
+                          {['16cm', '18cm', '24cm'].map((size, index) => (
+                            <div key={index}>
+                              <input
+                                className='option'
+                                id={`op-${size}`}
+                                type='radio'
+                                name={`option${index + 1}`}
+                                value={size}
+                                checked={selectedSize === size}
+                                onChange={() => handleSizeClick(size)}
+                              />
+                              <label htmlFor={`op-${size}`}>
+                                {size}
+                                {selectedSize === size && (
+                                  <img
+                                    className='img-check'
+                                    src='https://theme.hstatic.net/1000348721/1000449307/14/select-pro.png?v=566'
+                                    style={{ display: selectedSize === size ? 'block' : 'none' }}
+                                    onClick={() => handleSizeClick(size)}
+                                  />
+                                )}
+                              </label>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div className='add-cart-func' onClick={handleAddToCart}>
+                <button className='add-cart-btn'>
+                  <span>ADD TO CART</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-                                </form>
-
-                            </div>
-                            <div className='add-cart-func'>
-                                <button className='add-cart-btn'>
-                                    <span>ADD TO CART</span>
-                                </button>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </>
-     );
+    </>
+  );
 }
 
 export default Product_Details;

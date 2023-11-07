@@ -42,23 +42,23 @@ function Header() {
                   </a>
                 </li>
                 <li className="nav-item transform-shift nav-subnav">
-                  <a className="nav-link" href="/product">
+                  <a className="nav-link" href="/product/all">
                     Product<MdOutlineExpandMore/>
                   </a>
                   <div className='subnav-product'>
                     <ul className='category-ls'>
                         <li className='subnav-item'>
-                            <a className='subnav-link' href='/product/bread'>
+                            <a className='subnav-link' href='/product/2'>
                                 Bread
                             </a>
                         </li>
                         <li className='subnav-item'>
-                            <a className='subnav-link' href='/product/cake'>
+                            <a className='subnav-link' href='/product/1'>
                                 Cake
                             </a>
                         </li>
                         <li className='subnav-item'>
-                            <a className='subnav-link' href='/product/pastry'>
+                            <a className='subnav-link' href='/product/3'>
                                 Pastry
                             </a>
                         </li>

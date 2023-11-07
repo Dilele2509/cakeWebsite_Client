@@ -33,7 +33,7 @@
     min-width: 150px;
 }
 
-.list-item p{
+.nav-list a:hover .list-item p{
     font-size: 1.2rem;
 }
 
@@ -42,10 +42,11 @@
     padding-left: .4rem;
 }
 
-.list-item:hover .icon-item,
-.list-item:hover p{
+.nav-list a:hover .list-item .icon-item,
+.nav-list a:hover .list-item p{
     color: darkgoldenrod;
     cursor: pointer;
+    transition: all .3s ease-in-out !important;
 }
 
 .img-product-bg,

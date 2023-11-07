@@ -1,10 +1,37 @@
 /* import css */
 import "./Product.css";
-/* import img */
-import bread_category from "../../../assets/images/bread_category.webp";
-/* import icon */
+
+/* import some method */
+import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import axios from '../../../API/axios'; // Import your Axios instance
+import { Link } from "react-router-dom";
+
 
 function Product() {
+  const [products, getProducts] = useState([]);
+   // Get catId from URL
+  const { cat } = useParams();
+
+  useEffect(() => {
+    let axiosMethod = axios.post('/product/cat/', {category_id: cat});
+    if(cat === '1' || cat === '2' || cat === '3') {
+      axiosMethod= axiosMethod;
+    }else if(cat === 'all'){
+      axiosMethod = axios.get('/products');
+    }
+    axiosMethod
+        .then((response) => {
+          if (Array.isArray(response.data)) {
+            getProducts(response.data);
+          } else {
+            console.error('API response does not contain an array:', response.data);
+          }
+        })
+        .catch((error) => {
+          console.error('Error fetching product data:', error);
+        });
+  }, []);
     return (  
         <>
         {/* product menu */}
@@ -13,61 +40,22 @@ function Product() {
                     <div className='max-width-1280px'>
                         <div className='menu-products'>
                             <div role='list' className='_3-col-grid _3-col-grid_menu'>
-                                {/* product1 */}
-                                <div role="listItem" className="menu-item transform-shift">
-                                    <a href="/product/detail" className="item-product">
-                                        <div className='img-wrap'>
-                                            <img className='img-item' src={bread_category}></img>
-                                        </div>
-                                        <div className='title-name-type'>
-                                            <h3 className='name-title'>Cái này là tên sản phẩm</h3>
-                                        </div>
-                                    </a>
-                                </div>
-                                {/* product2 */}
-                                <div role="listItem" className="menu-item transform-shift">
-                                    <a href="/product/detail" className="item-product">
-                                        <div className='img-wrap'>
-                                            <img className='img-item' src={bread_category}></img>
-                                        </div>
-                                        <div className='title-name-type'>
-                                            <h3 className='name-title'>Cái này là tên sản phẩm</h3>
-                                        </div>
-                                    </a>
-                                </div>
-                                {/* product3 */}
-                                <div role="listItem" className="menu-item transform-shift">
-                                    <a href="/product/detail" className="item-product">
-                                        <div className='img-wrap'>
-                                            <img className='img-item' src={bread_category}></img>
-                                        </div>
-                                        <div className='title-name-type'>
-                                            <h3 className='name-title'>Cái này là tên sản phẩm</h3>
-                                        </div>
-                                    </a>
-                                </div>
-                                {/* product4 */}
-                                <div role="listItem" className="menu-item transform-shift">
-                                    <a href="/product/detail" className="item-product">
-                                        <div className='img-wrap'>
-                                            <img className='img-item' src={bread_category}></img>
-                                        </div>
-                                        <div className='title-name-type'>
-                                            <h3 className='name-title'>Cái này là tên sản phẩm</h3>
-                                        </div>
-                                    </a>
-                                </div>
-                                {/* product5 */}
-                                <div role="listItem" className="menu-item transform-shift">
-                                    <a href="/product/detail" className="item-product">
-                                        <div className='img-wrap'>
-                                            <img className='img-item' src={bread_category}></img>
-                                        </div>
-                                        <div className='title-name-type'>
-                                            <h3 className='name-title'>Cái này là tên sản phẩm</h3>
-                                        </div>
-                                    </a>
-                                </div>
+                                {/* map over products and display them */}
+                                {products.map((product) => (
+                                  product.deleted != 1 ? (
+                                    <div key={product.id} role="listItem" className="menu-item transform-shift">
+                                      <Link to={`/product/detail/${product.id}`} className="item-product">
+                                            <div className='img-wrap'>
+                                            <img className='img-item' src={product.thumbnail} alt={product.title} />
+                                            </div>
+                                            <div className='title-name-type'>
+                                                <h3 className='name-title'>{product.title}</h3>
+                                            </div>
+                                        </Link>
+                                    </div>
+                                  ) : null
+                                ))}
+                                
                             </div>
                         </div>
                     </div>

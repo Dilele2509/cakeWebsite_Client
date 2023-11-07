@@ -2,7 +2,7 @@
 import '../Contact/Contact.css';
 /* import icon */
 /* import img */
-import about3 from '../../../assets/images/about3.webp';
+const about3 = '/assets/images/about3.webp';
 
 function Contact() {
     return (

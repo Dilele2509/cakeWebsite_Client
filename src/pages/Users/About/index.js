@@ -2,7 +2,7 @@
 import '../About/About.css';
 
 /* import img */
-import about_page3 from "../../../assets/images/about_page3.jpg"
+const about_page3 = "/assets/images/about_page3.jpg"
 
 function About() {
     return(

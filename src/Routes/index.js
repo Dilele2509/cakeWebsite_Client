@@ -10,7 +10,6 @@ import LoginPage from "../pages/Login";
 import Home from "../pages/Users/Home";
 import About from "../pages/Users/About";
 import Account from "../pages/Users/Account";
-import Cake from "../pages/Users/Cake";
 import Contact from "../pages/Users/Contact";
 import Cart from "../pages/Users/Cart";
 import Product from "../pages/Users/Product";
@@ -21,9 +20,8 @@ const publicRoutes = [
     {path: '/login', component: LoginPage, layout: Blank},
     {path: '/about-us', component: About, layout:DefaultLayout},
     {path: '/account', component: Account, layout:noSlider},
-    {path: '/product', component: Product, layout: Sidebar},
-    {path: '/product/detail', component: Product_Details, layout: noSlider},
-    {path: '/product/cake', component: Cake, layout: noSlider},
+    {path: '/product/:cat', component: Product, layout: Sidebar},
+    {path: '/product/detail/:productId', component: Product_Details, layout: noSlider},
     {path: '/cart', component: Cart, layout: noSlider},
     {path: '/contact-us', component: Contact, layout: noSlider},
 ]

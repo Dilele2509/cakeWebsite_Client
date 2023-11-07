@@ -4,9 +4,9 @@ import React from "react";
 /* import css */
 import './Slider.css';
 /* import img */
-import slider1 from '../../../../assets/images/slider1.webp';
-import slider2 from '../../../../assets/images/slider2.webp';
-import slider3 from '../../../../assets/images/slider3.webp';
+const slider1 = '/assets/images/slider1.webp';
+const slider2 = '/assets/images/slider2.webp';
+const slider3 = '/assets/images/slider3.webp';
 
 function SliderComponent() {
     const arrImg =[slider1, slider2, slider3];

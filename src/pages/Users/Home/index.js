@@ -1,17 +1,16 @@
 /* import css */
 import './Home.css';
-
-/* import img */
-import about1 from '../../../assets/images/about1.webp';
-import about2 from '../../../assets/images/about2.webp';
-import about3 from '../../../assets/images/about3.webp';
-import bread_category from '../../../assets/images/bread_category.webp';
-import cake_category from '../../../assets/images/cake_category.webp';
-import pastry_category from '../../../assets/images/pastry_category.jpg';
-import about_page1 from '../../../assets/images/about_page1.jpg';
-
 /* import icon */
 import { GrShare } from 'react-icons/gr';
+
+/* import img */
+const about1 = '/assets/images/about1.webp';
+const about2 = '/assets/images/about2.webp';
+const about3 = '/assets/images/about3.webp';
+const bread_category = '/assets/images/bread_category.webp';
+const cake_category = '/assets/images/cake_category.webp';
+const pastry_category = '/assets/images/pastry_category.jpg';
+const about_page1 = '/assets/images/about_page1.jpg';
 
 function Home() {
     return(
@@ -55,7 +54,7 @@ function Home() {
                 <div className='main-container'>
                     <div className='_3-col-grid'>
                         {/* cat1 */}
-                        <a className='home-cat-link transform-shift' href='/product/bread'>
+                        <a className='home-cat-link transform-shift' href='/product/2'>
                             <div className='menu-cat-wrap'>
                                 <div className='cat-img-container'>
                                     <img className='cat-img' src={bread_category}></img>
@@ -66,7 +65,7 @@ function Home() {
                             </div>
                         </a>
                         {/* cat2 */}
-                        <a className='home-cat-link transform-shift' href='/product/cake'>
+                        <a className='home-cat-link transform-shift' href='/product/1'>
                             <div className='menu-cat-wrap'>
                                 <div className='cat-img-container'>
                                     <img className='cat-img' src={cake_category}></img>
@@ -77,7 +76,7 @@ function Home() {
                             </div>
                         </a>
                         {/* cat3 */}
-                        <a className='home-cat-link transform-shift' href='/product/pastry'>
+                        <a className='home-cat-link transform-shift' href='/product/3'>
                             <div className='menu-cat-wrap'>
                                 <div className='cat-img-container'>
                                     <img className='cat-img' src={pastry_category}></img>
