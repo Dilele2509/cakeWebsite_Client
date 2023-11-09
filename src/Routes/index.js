@@ -7,6 +7,7 @@ import {Blank} from '../components/Layout';
 
 //Pages
 import LoginPage from "../pages/Login";
+import SignUp from "../pages/SignUp";
 import Home from "../pages/Users/Home";
 import About from "../pages/Users/About";
 import Account from "../pages/Users/Account";
@@ -18,6 +19,7 @@ import Product_Details from "../pages/Users/Product_Details";
 const publicRoutes = [
     {path: '/', component: Home},
     {path: '/login', component: LoginPage, layout: Blank},
+    {path: '/sign-up', component: SignUp, layout: Blank},
     {path: '/about-us', component: About, layout:DefaultLayout},
     {path: '/account', component: Account, layout:noSlider},
     {path: '/product/:cat', component: Product, layout: Sidebar},

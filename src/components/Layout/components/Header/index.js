@@ -8,7 +8,20 @@ import {MdOutlineAccountCircle} from 'react-icons/md';
 import {MdShoppingCart} from 'react-icons/md';
 import {MdOutlineExpandMore} from 'react-icons/md';
 
+import React, { useState } from 'react';
+
 function Header() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const handleLogin = async () => {
+      try {
+          // Thực hiện xử lý đăng nhập, nếu đăng nhập thành công:
+          setIsLoggedIn(true);
+      } catch (error) {
+          // Xử lý lỗi đăng nhập
+          console.error('Login failed:', error);
+      }
+  };
+
     return (
         <header>
         <div className="menu_sidebar">
@@ -74,12 +87,20 @@ function Header() {
             </div>
           </nav>
           <div className="sub-nav-header">
-            <div className="pre-search-header">
-              <BiSearchAlt className="iconHeader pre-search-btn"/>
-              <input className="pre-searchInput" placeholder="Search" type="text" name="pre-searchHeader"></input>
-            </div>
-            <a className='icon-link' href='/cart'><MdShoppingCart className="iconHeader"/></a>
-            <a className='icon-link' href='/login'><MdOutlineAccountCircle className='iconHeader'/></a>
+              <div className="pre-search-header">
+                  <BiSearchAlt className="iconHeader pre-search-btn" />
+                  <input className="pre-searchInput" placeholder="Search" type="text" name="pre-searchHeader" />
+              </div>
+              <a className="icon-link" href="/cart"><MdShoppingCart className="iconHeader" /></a>
+              {isLoggedIn ? (
+                  // Hiển thị hình ảnh người dùng khi đã đăng nhập
+                  <a className="icon-link" href="/user-profile">
+                      <img src="url_of_user_image.jpg" alt="User" className="user-avatar" />
+                  </a>
+              ) : (
+                  // Hiển thị icon thông thường khi chưa đăng nhập
+                  <a className="icon-link" href="/login"><MdOutlineAccountCircle className="iconHeader" /></a>
+              )}
           </div>
         </div>
         </header>
