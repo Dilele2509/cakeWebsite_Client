@@ -1,89 +1,191 @@
 /* import lib */
-import { useParams } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import axios from '../../../API/axios';
+import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 /* import css */
 import '../Product_Details/Product_details.css'
+import '../../SignUp/SignUp.css'
+import {render} from 'react-dom';
+import {FaBug} from 'react-icons/fa';
+import { AiOutlineRight, AiOutlineClose, AiFillCheckCircle } from 'react-icons/ai';
 
-import { AiOutlineRight } from 'react-icons/ai';
+/* ============================================== */
+
+const main = document.getElementById("toast");
+
+class Toasts {
+  constructor(header, message, type, duration) {
+    this.header = header;
+    this.message = message;
+    this.type = type;
+    this.duration = duration;
+  }
+
+  toastMethod() {
+    if (main) {
+      let divToast = document.createElement("div");
+      divToast.classList.add('toast', `toast--${this.type}`);
+  
+      const slideInTime = 500;
+      const fadeTime = 1000;
+  
+      divToast.style.animation = `ease slideInLeft ${slideInTime}ms, linear fadeOut ${fadeTime}ms ${this.duration}ms forwards`;
+  
+      let icons = {
+        success: <AiFillCheckCircle />,
+        error: <FaBug />,
+      };
+      let iconToast = icons[this.type];
+  
+      render(
+        <>
+          <div className="toast__icon">
+            {iconToast}
+          </div>
+          <div className="toast__body">
+            <h3 className="toast__header">{this.header}</h3>
+            <p className="toast__message">{this.message}</p>
+          </div>
+          <div className="toast__closeBtn">
+            <AiOutlineClose />
+          </div>
+        </>,
+        divToast
+      );
+  
+      main.appendChild(divToast);
+  
+      let autoRemove = setTimeout(() => {
+        main.removeChild(divToast);
+      }, this.duration + fadeTime);
+  
+      main.onclick = function () {
+        main.removeChild(divToast);
+        clearTimeout(autoRemove);
+      };
+    }
+  }
+}
+
+function showToast(event, message_content) {
+  switch (event) {
+    case 'success':
+      let toastSuccess = new Toasts(
+        'Success',
+        message_content,
+        'success',
+        3000
+      );
+      toastSuccess.toastMethod();
+      break;
+
+    case 'error':
+      let toastError = new Toasts(
+        'Error',
+        message_content,
+        'error',
+        3000
+      );
+      toastError.toastMethod();
+      break;
+  }
+}
 
 function Product_Details() {
   // State for quantity
   const [quantity, setQuantity] = useState(1);
   
- // State for product, selectedSize, and productPrice
- const [product, setProduct] = useState({});
- const [defaultSize, setDefaultSize] = useState(product.size); // Giá trị kích thước mặc định
- const [selectedSize, setSelectedSize] = useState(null);
- const [productPrice, setProductPrice] = useState(0);
+  // State for product, selectedSize, and productPrice
+  const [product, setProduct] = useState({});
+  const [defaultSize, setDefaultSize] = useState(product.size); // Giá trị kích thước mặc định
+  const [selectedSize, setSelectedSize] = useState(null);
+  const [productPrice, setProductPrice] = useState(0);
 
- // Get productId from URL
- const { productId } = useParams();
+  // Get productId from URL
+  const location = useLocation();
+  const productId = location.state ? location.state.product_id : null;
 
- // Fetch product data from the API
- useEffect(() => {
-   axios.post('/product/id/', { id: productId })
-     .then((response) => {
-       console.log('Product Data:', response.data);
-       setProduct(response.data[0]);
-       setDefaultSize(response.data[0].size); // Cập nhật giá trị kích thước mặc định
-       setSelectedSize(response.data[0].size); // Cập nhật kích thước hiện tại
-       setProductPrice(response.data[0].total);
-     })
-     .catch((error) => {
-       console.error('Error fetching product details:', error);
-     });
- }, [productId]);
+  // Fetch product data from the API
+  useEffect(() => {
+    axios.post('/product/id/', { id: productId })
+      .then((response) => {
+        console.log('Product Data:', response.data);
+        setProduct(response.data[0]);
+        setDefaultSize(response.data[0].size); // Cập nhật giá trị kích thước mặc định
+        setSelectedSize(response.data[0].size); // Cập nhật kích thước hiện tại
+        setProductPrice(response.data[0].total);
+      })
+      .catch((error) => {
+        console.error('Error fetching product details:', error);
+      });
+  }, [productId]);
 
- // Handle quantity increment and decrement
- const incrementQuantity = () => {
-  setQuantity(parseInt(quantity,10) + 1);
-};
+  // Handle quantity increment and decrement
+  const incrementQuantity = () => {
+    setQuantity(parseInt(quantity,10) + 1);
+  };
 
- const decrementQuantity = () => {
-  if (quantity > 1) {
-    setQuantity(parseInt(quantity,10) - 1);
-  }
- };
+  const decrementQuantity = () => {
+    if (quantity > 1) {
+      setQuantity(parseInt(quantity,10) - 1);
+    }
+  };
 
- // Handle size selection
- const handleSizeClick = (size) => {
-   axios.put('/product/size/', {
-     id: product.id,
-     size: size
-   })
-     .then((response) => {
-       setSelectedSize(size);
-       setProductPrice(response.data[0].total);
-       console.log('Size updated successfully:', response.data);
-     })
-     .catch((error) => {
-       console.error('Error updating size:', error);
-     });
- };
+  // Handle size selection
+  const handleSizeClick = (size) => {
+    axios.put('/product/size/', {
+      id: product.id,
+      size: size
+    })
+      .then((response) => {
+        setSelectedSize(size);
+        setProductPrice(response.data[0].total);
+        console.log('Size updated successfully:', response.data);
+      })
+      .catch((error) => {
+        console.error('Error updating size:', error);
+      });
+  };
 
- //add cart
- const handleAddToCart = () => {
-  axios.post('/order-detail/add/', {
-    product_id: product.id,
-    product_size: product.size,
-    price: productPrice,
-    quantity: quantity
-  })
-  .then((response) => {
-    // Hiển thị thông báo thành công bằng alert
-    window.alert('Order added successfully');
+  //add cart
+  const navigate = useNavigate();
 
-    // Xử lý phản hồi từ backend (nếu cần)
-    console.log('Order detail added successfully:', response.data);
-  })
-  .catch((error) => {
-    // Hiển thị thông báo lỗi bằng alert
-    window.alert('Error adding order detail');
+  const handleAddToCart = async() => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json"
+        },
+        withCredentials: true
+    }
+    try {
+      const response = await axios.get('/login/check-status/', config);
+      const { status } = response.data;
 
-    console.error('Error adding order detail:', error);
-  });
+      console.log(status);
+
+      if (status) {
+        axios.post('/order-detail/add/', {
+          product_id: product.id,
+          product_size: product.size,
+          price: productPrice,
+          quantity: quantity
+        }, config)
+        .then((response) => {
+          // Hiển thị thông báo thành công bằng alert
+          //window.alert('Order added successfully');
+          showToast('success', 'Add to cart successfully');
+          console.log('Order detail added successfully:', response.data);
+        })
+      }else{
+        navigate('/login');
+      }
+    } catch (error) {
+        //window.alert('Error adding order detail');
+        showToast('error', 'Error add to cart');
+        console.error('Error checking login status:', error);
+    }
 };
 
   return (
@@ -197,6 +299,7 @@ function Product_Details() {
           </div>
         </div>
       </div>
+      <div id='toast' style={{ top: '110px' }}></div>
     </>
   );
 }

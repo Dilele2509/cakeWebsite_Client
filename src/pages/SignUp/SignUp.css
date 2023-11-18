@@ -170,6 +170,9 @@
     color: #ff623d;
 }
 
+.toast--success {
+    color: #49FF00;
+}
 
 .toast + .toast {
     margin-top: 24px;

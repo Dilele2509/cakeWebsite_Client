@@ -44,7 +44,7 @@ function Product() {
                                 {products.map((product) => (
                                   product.deleted !== 1 ? (
                                     <div key={product.id} role="listItem" className="menu-item transform-shift">
-                                      <Link to={`/product/detail/${product.id}`} className="item-product">
+                                      <Link to={`/product/detail/`} state={{product_id: product.id}} className="item-product">
                                             <div className='img-wrap'>
                                             <img className='img-item' src={product.thumbnail} alt={product.title} />
                                             </div>

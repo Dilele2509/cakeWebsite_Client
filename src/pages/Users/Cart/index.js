@@ -1,17 +1,22 @@
 import './Cart.css'
 import {RiDeleteBinLine} from 'react-icons/ri'
 
-
-import { useParams } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
+import { Link } from "react-router-dom";
 import axios from '../../../API/axios'; // Import your Axios instance
 
 function Cart() {
+    const config = {
+        headers: {
+          "Content-Type": "application/json"
+          },
+          withCredentials: true
+      }
     const [cartItem, setCartItem] = useState([]);
-
+    const [noteValue, setNoteValue] = useState('');
     useEffect(() => {
         // Gọi API để lấy danh sách sản phẩm trong giỏ hàng và gán vào cartItem
-        axios.get('/order-details')
+        axios.get('/order-detail/id/', config)
             .then((response) => {
                 setCartItem(response.data);
             })
@@ -57,12 +62,12 @@ function Cart() {
           }
           return item;
         });
-      
         // Cập nhật lại danh sách sản phẩm sau khi cập nhật quantity và total
         Promise.all(updatedCartItem).then(updatedItems => {
           setCartItem(updatedItems);
         });
       }; 
+
     const decrementQuantity = (id, quantity) => {
         if (quantity > 1) {
           const updatedCartItem = cartItem.map(async item => {
@@ -84,13 +89,12 @@ function Cart() {
             }
             return item;
           });
-      
           // Cập nhật lại danh sách sản phẩm sau khi cập nhật quantity và total
           Promise.all(updatedCartItem).then(updatedItems => {
             setCartItem(updatedItems);
           });
         } else {
-          // Xử lý trường hợp quantity bằng 0 (hoặc bất kỳ hành động nào bạn muốn thực hiện)
+          // Xử lý trường hợp quantity bằng 0
           handleDeleteProduct(id);
         }
     };
@@ -121,9 +125,9 @@ function Cart() {
                                     </tr>
                                     {/* map over items and display them */}
                                     {cartItem.map((item, index) => (
-                                        <tr key={index} className="cart-item" data-id={item.id}>
+                                        <tr key={index} className="cart-item" data-id={item.product_id}>
                                             <td className="cart-product">
-                                                <a href="/product/detail/" className="cart-pro-item">
+                                                <Link to={`/product/detail/${item.product_id}`} className="cart-pro-item">
                                                     <div className="cart-pro-img">
                                                         <img src={item.thumbnail} alt="product img"></img>
                                                     </div>
@@ -132,7 +136,7 @@ function Cart() {
                                                         <p className="cart-pro-size">{item.product_size}</p>
                                                         <p className="cart-pro-unit-price">${item.price}</p>
                                                     </div>
-                                                </a>
+                                                </Link>
                                             </td>
                                             <td className="cart-quant">
                                                 <div>
@@ -172,12 +176,13 @@ function Cart() {
                                             <b>${totalHere}</b>
                                         </div>
                                         <div className='next-checkout'>
-                                            <a href='/cart/checkout'>Checkout</a>
+
+                                            <Link to='/check-out' state={{note: noteValue, total: totalHere}}>Checkout</Link>
                                         </div>
                                     </div>
                                     <div className='take-note-cart'>
                                         <label className='control-label' htmlFor='cartInstruction'>Take your note</label>
-                                        <textarea spellCheck='false' className='from-control' name='note' id='cartInstruction' placeholder='Please leave a note if there is anything you need to note about your order'>
+                                        <textarea onChange={(e) => setNoteValue(e.target.value)} spellCheck='false' className='from-control' name='note' id='cartInstruction' placeholder='Please leave a note if there is anything you need to note about your order'>
                                         </textarea>
                                     </div>
                                 </div>

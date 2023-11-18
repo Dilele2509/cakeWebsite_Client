@@ -21,16 +21,23 @@ function Header() {
 
   useEffect(() => {
     // check user login status when the component mounts
+    const config = {
+      headers: {
+        "Content-Type": "application/json"
+        },
+        withCredentials: true
+      }
     const checkLoginStatus = async () => {
       try {
-        const response = await axios.get('/login/check-status/');
+        const response = await axios.get('/login/check-status/', config);
         const { status } = response.data;
 
-        console.log(status);
+        //console.log(status);
   
         if (status) {
-          const avatarUrl = await axios.get('user/id/');
-          setUserAvatarUrl(avatarUrl.avatar); // Fix: Update the user avatar URL using the function
+          const avatarUrl = await axios.get('user/id/', config);
+          //console.log(avatarUrl.data.user[0].avatar);
+          setUserAvatarUrl(avatarUrl.data.user[0].avatar); 
 
         }else{
           console.log('no logged in yet');
@@ -51,17 +58,6 @@ function Header() {
           </a>
         </div>
         <nav className="navigation navbar navbar-dark">
-          {/* <button
-            className="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbarsExample05"
-            aria-controls="navbarsExample05"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button> */}
           <div className="" id="">
             <ul className="navbar-nav">
               <li className="nav-item transform-shift">
@@ -111,10 +107,10 @@ function Header() {
                 <BiSearchAlt className="iconHeader pre-search-btn" />
                 <input className="pre-searchInput" placeholder="Search" type="text" name="pre-searchHeader" />
             </div>
-            <a className="icon-link" href="/cart"><MdShoppingCart className="iconHeader" /></a>
+            <a className="icon-link icon-cart" href="/cart"><MdShoppingCart className="iconHeader" /></a>
             {userAvatar ? (
               <a className='icon-link' href='/user-profile'>
-                <img id="userAvatar" className="iconHeader" src={userAvatar} alt="User Avatar" />
+                <img id="userAvatar" className="iconHeader userAva" src={userAvatar} alt="User Avatar" />
               </a>
             ) : (
               <a className="icon-link" href="/login"><MdOutlineAccountCircle className="iconHeader" /></a>

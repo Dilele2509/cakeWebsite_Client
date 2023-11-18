@@ -387,3 +387,18 @@ button {
     font-size: 1.5rem;
 }
 /* end section */
+
+.back-home-page{
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin-top: 2.5rem;
+    margin-left: 3rem;
+    padding-top: .1rem;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    font-size: 1.8rem;
+    text-align: center;
+    background-color: var(--primary-dark-brown);
+}

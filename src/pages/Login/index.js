@@ -4,11 +4,11 @@ import {MdOutlineAlternateEmail} from 'react-icons/md'
 import {BsFillLockFill} from 'react-icons/bs'
 import {PiWarningCircleFill} from 'react-icons/pi';
 import {FaBug} from 'react-icons/fa';
-import { FaRegUser } from 'react-icons/fa';
 import {AiOutlineClose} from 'react-icons/ai';
+import { GoHomeFill } from "react-icons/go";
 
 import axios from '../../API/axios';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ReactDOM from 'react-dom';
 
 
@@ -27,8 +27,8 @@ class Toasts {
       let divToast = document.createElement("div");
       divToast.classList.add('toast', `toast--${this.type}`);
   
-      let slideInTime = 500;
-      let fadeTime = 1000;
+      const slideInTime = 500;
+      const fadeTime = 1000;
   
       divToast.style.animation = `ease slideInLeft ${slideInTime}ms, linear fadeOut ${fadeTime}ms ${this.duration}ms forwards`;
   
@@ -94,6 +94,12 @@ function showToast(event, message_content) {
 
 function LoginPage() {
     const navigate = useNavigate();
+    const config = {
+      headers: {
+        "Content-Type": "application/json"
+        },
+        withCredentials: true
+    }
 
     const handleLogin = async () => {
       const email = document.getElementById('email').value;
@@ -107,14 +113,14 @@ function LoginPage() {
         }
 
         //gọi API login từ backend
-        const response = await axios.post('/login', { email: email, password: password });
+        const response = await axios.post('/login', { email: email, password: password },config);
         
         //xử lí phản hồi từ API
         if(response.data.status !== 'Error'){
-            //const userInfo = response.data;
+            const userInfo = response.data;
             // Redirect to home page
             console.log('login successful');
-            //navigate('/');
+            window.location.href = '/';
         }else if(response.data.problem === 'Email'){
             console.error('Registration failed:', response.data.message);
             showToast('error', response.data.message);
@@ -132,6 +138,7 @@ function LoginPage() {
     };
     return ( 
         <>
+        <Link to='/' className='back-home-page'><GoHomeFill/></Link>
         <form className="login-form-main" action="">
             <p className="login-heading">Login</p>
             <div className="log-input-contain">

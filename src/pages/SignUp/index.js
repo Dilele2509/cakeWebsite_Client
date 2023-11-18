@@ -6,11 +6,13 @@ import {PiWarningCircleFill} from 'react-icons/pi';
 import {FaBug} from 'react-icons/fa';
 import { FaRegUser } from 'react-icons/fa';
 import {AiOutlineClose} from 'react-icons/ai';
+import { GoHomeFill } from "react-icons/go";
 
 import axios from '../../API/axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
-import ReactDOM from 'react-dom';
+import {render} from 'react-dom';
+import {Link} from 'react-router-dom';
 
 
 
@@ -29,8 +31,8 @@ class Toasts {
       let divToast = document.createElement("div");
       divToast.classList.add('toast', `toast--${this.type}`);
   
-      let slideInTime = 500;
-      let fadeTime = 1000;
+      const slideInTime = 500;
+      const fadeTime = 1000;
   
       divToast.style.animation = `ease slideInLeft ${slideInTime}ms, linear fadeOut ${fadeTime}ms ${this.duration}ms forwards`;
   
@@ -40,7 +42,7 @@ class Toasts {
       };
       let iconToast = icons[this.type];
   
-      ReactDOM.render(
+      render(
         <>
           <div className="toast__icon">
             {iconToast}
@@ -113,7 +115,7 @@ function SignUp() {
         // check confirm password
         if (password !== confirmPassword) {
             // Hiển thị thông báo lỗi
-            console.error('Password and Confirm Password do not match');
+            console.error('Password and Confirm Password does not match');
             showToast('warning', 'Password and Confirm Password do not match');
             return;
         }
@@ -139,6 +141,7 @@ function SignUp() {
 
   return (
     <>
+      <Link to='/' className='back-home-page'><GoHomeFill/></Link>
       <form className="signUp-form-main" action="">
         <p className="signUp-heading">Sign Up</p>
         <div className="signUp-input-contain">
