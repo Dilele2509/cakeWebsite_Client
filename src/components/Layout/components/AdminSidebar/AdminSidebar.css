@@ -2,11 +2,10 @@
     position: relative;
     padding: 1rem 0;
     background-color: var(--primary-dark-brown);
-    height: 95%;
     width: 100%;
-    max-width: 25%;
+    max-width: 20%;
     border-radius: 10px;
-    margin: auto 1rem;
+    margin: 1rem 1rem 1rem 1rem;
 }
 
 .admin-sidebar-close{

@@ -3,9 +3,8 @@
 }
 
 /*-- header --*/
-header {
-    position: sticky;
-    z-index: 9999;
+.div-header {
+    position: relative ;
     top: 0;
     height: var(--header-height);
 }
@@ -15,10 +14,13 @@ header {
     flex-flow: row;
     justify-content: space-between;
     align-items: center;
-    background-color: transparent;
-    width: 100%;
-    height: var(--header-height);
-    padding: 1rem 1rem;
+    background-color: var(--primary-dark-beige);
+    width: 98%;
+    margin: 1.2rem auto 0 auto;
+    padding-left: 1rem;
+    border-radius: 10px;
+    /* height: var(--header-height);
+    padding: 1rem 1rem; */
     position: absolute;
     top: 0;
     left: 0;
@@ -60,13 +62,13 @@ header {
 }  
 
 .icon-link-admin:hover{
-    border-color: var(--primary-light-brown);
+    border-color: var(--primary-dark-brown);
     transition-duration: .5s !important;
 }
 
 .icon-link-admin:hover .admin-name,
 .icon-link-admin:hover .icon-admin-account{
-    color: var(--primary-light-brown);
+    color: var(--primary-dark-brown);
     transition-duration: .5s;
 }
 
