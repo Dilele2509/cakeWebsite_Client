@@ -26,7 +26,7 @@ function App() {
   
         if (status) {
           const roleResponse= await axios.get('user/id/', config);
-          console.log(roleResponse.data.user[0].role_id);
+          //console.log(roleResponse.data.user[0].role_id);
           setRoleId(roleResponse.data.user[0].role_id);
 
         }else{

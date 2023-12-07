@@ -12,7 +12,7 @@
 .profile-img{
     width: 8rem;
     height: 8rem;
-    object-fit: contain;
+    object-fit: cover;
     object-position: center;
     border-radius: 50%;
 }
@@ -165,4 +165,46 @@
   display: inline;
   margin-bottom: 7px;
   font-size: 1rem;
+}
+
+.change-ava-area{
+  display: flex;
+  align-items: center;
+
+}
+
+.upload-file-container{
+  position: relative;
+  background-color: #fff;
+  border-radius: 5px;
+  border: #000 solid 1px;
+  min-width: 8rem;
+  height: 2.2rem;
+  margin-right: 1rem;
+}
+
+.upload-file-container label{
+  line-height: 2.2rem;
+  text-align: center;
+  color: #000;
+}
+
+.upload-icon{
+  font-size: 1.3rem;
+  margin-bottom: -.3rem;
+}
+
+input[type='file']{
+  position: absolute;
+  opacity: 0;
+  width: 8rem;
+  height: 2.2rem;
+  top: 0;
+  left: 0;
+  z-index: 1111;
+}
+
+.cancel{
+  background-color: #ff4141;
+  margin-left: 1rem;
 }

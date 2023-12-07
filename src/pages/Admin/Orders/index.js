@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from '../../../API/axios';
+import { Link } from 'react-router-dom';
 import '../Users/User.css'; // Import CSS file
 import '../Category/Cat.css';
-import {RiDeleteBinLine} from 'react-icons/ri'
+import './Order.css'
+import {MdCancel} from 'react-icons/md'
 
 function Orders() {
   const config = {
@@ -17,8 +19,11 @@ function Orders() {
   const [orderData, setOrderData] = useState({
     id: '',
     user_id: '',
+    receiver_phone: '',
+    delivery_address: '',
     note: '',
     order_date: '',
+    payment_method: '',
     status: '',
     total: '' 
   });
@@ -46,8 +51,11 @@ function Orders() {
     setOrderData(() => ({
         id: cat.id,
         user_id: cat.user_id,
+        receiver_phone: cat.receiver_phone,
+        delivery_address: cat.delivery_address,
         note: cat.note,
         order_date: cat.order_date,
+        payment_method: cat.payment_method,
         status: cat.status,
         total: cat.total 
     }));
@@ -60,13 +68,18 @@ function Orders() {
       const updatedData = {
         id: orderData.id || undefined,
         user_id: orderData.user_id || undefined,
+        receiver_phone: orderData.receiver_phone || undefined,
+        delivery_address: orderData.delivery_address || undefined,
         note: orderData.note || undefined,
+        payment_method: orderData.payment_method || undefined,
         order_date: orderData.order_date || undefined,
-        status: orderData.status || undefined,
+        status: parseInt(orderData.status,10) || undefined,
         total: orderData.total || undefined
       };
 
-        axios.put(`/order/update/`, updatedData, config);
+      console.log('update data: ',updatedData);
+
+      axios.put(`/order/update/`, updatedData, config);
 
       setOrderList(prevorderList => {
         return prevorderList.map(order => {
@@ -86,17 +99,24 @@ function Orders() {
     setEditingOrderId(null);
   }
 
-  const handleDelOrder = (id, order) => {
-    axios.put('/order/disable', { id: id })
+  const handleDelOrder = (id) => {
+    axios.put('/order/cancel/', { id: id })
       .then((response) => {
-        console.log(`order deleted successfully:`, response.data);
-
-        // Update the orderList state to reflect the change in order status
+        console.log(`Order cancelled successfully:`, response.data);
+  
+        setOrderList(prevOrderList => {
+          return prevOrderList.map(order => {
+            if (order.id === id) {
+              return { ...order, status: 0 }; 
+            }
+            return order;
+          });
+        });
       })
       .catch((error) => {
-        console.error(`Error deleted order:`, error);
+        console.error(`Error cancelling order:`, error);
       });
-  };
+  };  
 
   return (
     <div className='user-list-container'>
@@ -113,9 +133,13 @@ function Orders() {
                 <thead>
                   <tr>
                     <th>ID</th>
-                    <th>User ID</th>
-                    <th>Note</th>
-                    <th>Order Date</th>
+                    <th style={{minWidth:"5rem"}}>User ID</th>
+                    <th style={{minWidth:"7rem"}}>Phone</th>
+                    <th>Delivery Address</th>
+                    <th style={{minWidth:"15rem"}}>Order Date</th>
+                    <th style={{minWidth:"15rem"}}>Note</th>
+                    <th>Payment Method</th>
+                    <th style={{minWidth:"10rem"}}>Transport Fee</th>
                     <th>Status</th>
                     <th>Total</th>
                     <th></th>
@@ -126,17 +150,31 @@ function Orders() {
                   {/* Map over user list then display them */}
                   {orderList.map((order) => (
                       <tr key={order.id}>
-                        <td>
-                          <span>{order.id}</span>
-                        </td>
+                          <td>
+                            <Link to={'/order/detail'} state={{order_id: order.id}}>
+                              <b>{order.id}</b>
+                            </Link>
+                          </td>
                         <td>
                             <h4>{order.user_id}</h4>
                         </td>
                         <td>
-                            <span>{order.note}</span>
+                            <span>{order.receiver_phone}</span>
+                        </td>
+                        <td className='long-text-container'>
+                            <span>{order.delivery_address}</span>
                         </td>
                         <td>
                             <span>{order.order_date}</span>
+                        </td>
+                        <td className='note long-text-container non-center'>
+                            <span>{order.note}</span>
+                        </td>
+                        <td>
+                            <span>{order.payment_method}</span>
+                        </td>
+                        <td>
+                            <span>{order.transport_fee}</span>
                         </td>
                         <td>
                             {editingOrderId === order.id ? (
@@ -170,9 +208,9 @@ function Orders() {
                         <td>
                           <div
                             className='switch-icon disable-check'
-                            onClick={() => handleDelOrder(order.id, order)}
+                            onClick={() => handleDelOrder(order.id)}
                           >
-                            <RiDeleteBinLine />
+                            <MdCancel />
                           </div>
                         </td>
                       </tr>

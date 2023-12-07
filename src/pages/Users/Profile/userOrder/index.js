@@ -1,5 +1,6 @@
 import '../../Checkout/checkout.css'
 import './userOrder.css'
+import '../userOrder/OrderDetail/OrderDetail.css'
 
 import axios from '../../../../API/axios'
 import {Link} from 'react-router-dom'
@@ -25,6 +26,30 @@ function UserOrder() {
                 console.error('Error fetch order data', error.message);
             })
     })
+
+    const setStatusDisplay =(status) =>{
+        let statusDisplay ='unknown'
+        switch (status) {
+            case 1:
+                statusDisplay = 'processing'
+                break;
+            case 2:
+                statusDisplay = 'confirmed'
+                break;
+            case 3:
+                statusDisplay = 'delivering'
+                break;
+            case 4:
+                statusDisplay = 'completed'
+                break;
+            case 0:
+                statusDisplay = 'canceled'
+                break;
+            default:
+                break;
+        }
+        return statusDisplay;
+    }
     return ( 
         <>
             <div className="user-order-container">
@@ -49,7 +74,7 @@ function UserOrder() {
                                     item.note !== null ? item.note : item.note = 'no note',
                                     <tr key={item.id} className="cart-item">
                                         <td className="order-list-id">
-                                            <Link to='/user-profile/order/detail'>
+                                            <Link to='/user-profile/order/detail' state={{order_id: item.id}}>
                                                 <div className="user-order-info">
                                                     <h3 className="user-order-title">{item.id}</h3>
                                                 </div>
@@ -66,13 +91,13 @@ function UserOrder() {
                                             </div>
                                         </td>
                                         <td className="order-list-status">
-                                            <div className='user-order-info'>
-                                                <p className="user-order-status">{item.status}</p>
+                                            <div className='user-order-info od-info-status'>
+                                                <p className={`user-order-status ${item.status === 0 ? 'cancel' : ''}  ${(item.status !== 4 && item.status !== 0) ? 'notCompleted' : ''}`}>{setStatusDisplay(item.status)}</p>
                                             </div>
                                         </td>
                                         <td className="order-list-total">
                                             <div className='user-order-price'>
-                                                <p className="user-order-total">${item.total}</p>
+                                                <p className="user-order-total">{item.total} VND</p>
                                             </div>
                                         </td>
                                     </tr>

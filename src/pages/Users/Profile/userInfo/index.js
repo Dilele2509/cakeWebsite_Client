@@ -4,9 +4,14 @@ import {Link} from 'react-router-dom'
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from '../../../../API/axios'
+import { MdOutlineFileUpload } from "react-icons/md";
 
 function Profile() {
     const [userData, setUserData] = useState('');
+    const [userAva, setUserAva] = useState();
+    const [uploadAvailable, setUploadAvailable] = useState(false);
+    const [selectedFile, setSelectedFile] = useState(null); //use for contain img file
+    const src = 'http://localhost:3001/'
     const config = {
         headers: {
           "Content-Type": "application/json"
@@ -16,20 +21,20 @@ function Profile() {
 
     useEffect(() => {
     // Fetch user data when the component mounts
-    const fetchUserData = async () => {
-      try {
-        const response = await axios.get('/user/id/', config);
-        //console.log(response.data.user[0]);
-        setUserData(response.data.user[0]);
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
+        const fetchUserData = async () => {
+        try {
+            const response = await axios.get('/user/id/', config);
+            //console.log(response.data.user[0]);
+            setUserData(response.data.user[0]);
+            setUserAva(src+response.data.user[0].avatar);
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+        }
     };
 
     fetchUserData();
     }, []);  
 
-    const navigate = useNavigate();
     const handleLogout = async ()=>{
         try {
             const response = await axios.get('/logout', config);
@@ -39,14 +44,70 @@ function Profile() {
             console.log(error.message);
         }
     }
+
+    //use for upload avatar
+    //turn on upload mode
+    const handleUploadStatus = ()=>{
+        setUploadAvailable(true);
+    }
+
+    const fileSelectedHandler = event => {
+        const file = event.target.files[0];
+        previewFile(file);
+        setSelectedFile(file);
+    };
+
+    const previewFile = (file) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+          setUserAva(reader.result);
+        };
+      };
+
+    const fileUploadHandler = async() => {
+    const image = new FormData();
+    image.append('avatar', selectedFile);
+    image.append('userId', userData.id)
+    console.log(userData.id);
+    await axios.post('/user/upload/', image, {
+        headers:{
+        'Content-Type': 'multipart/form-data',
+        }})
+        .then(res => {
+        console.log(res);
+        setUploadAvailable(false)
+        })
+        .catch((error)=>{
+        console.log(error.message);
+        });
+    };
+      
+
+    const handleCancelUpload = () =>{
+        setUploadAvailable(false)
+    }
     return (
         <>
             <div className='content-profile-area'>
                 <div className='profile-img-area'>
                     <div className='profile-img-func'>
-                        <img className='profile-img' src={userData.avatar}></img>
+                        <img className='profile-img' src={userAva}></img>
                         <div className='change-user-ava'>
-                            <button className='change-ava-btn'>Change</button>
+                            {uploadAvailable ? (
+                                <>
+                                    <div className='change-ava-area'>
+                                        <div className='upload-file-container'>
+                                            <label htmlFor='file-upload'>Input File <MdOutlineFileUpload className='upload-icon'/></label>
+                                            <input id='file-upload' type="file" accept=".png, .jpg, .jpeg" onChange={fileSelectedHandler} />
+                                        </div>
+                                        <button className='change-ava-btn' onClick={fileUploadHandler}>Upload</button>
+                                        <button className='change-ava-btn cancel' onClick={handleCancelUpload}>Cancel</button>
+                                    </div>
+                                </>
+                            ):(
+                                <button className='change-ava-btn' onClick={handleUploadStatus}>Change</button>
+                            )}
                         </div>
                     </div>
                     <div className='logout'>

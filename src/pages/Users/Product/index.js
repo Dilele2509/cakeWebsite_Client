@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 
 
 function Product() {
+  const src = 'http://localhost:3001/';
   const [products, getProducts] = useState([]);
    // Get catId from URL
   const { cat } = useParams();
@@ -42,18 +43,17 @@ function Product() {
                             <div role='list' className='_3-col-grid _3-col-grid_menu'>
                                 {/* map over products and display them */}
                                 {products.map((product) => (
-                                  product.deleted !== 1 ? (
-                                    <div key={product.id} role="listItem" className="menu-item transform-shift">
-                                      <Link to={`/product/detail/`} state={{product_id: product.id}} className="item-product">
-                                            <div className='img-wrap'>
-                                            <img className='img-item' src={product.thumbnail} alt={product.title} />
-                                            </div>
-                                            <div className='title-name-type'>
-                                                <h3 className='name-title'>{product.title}</h3>
-                                            </div>
-                                        </Link>
-                                    </div>
-                                  ) : null
+                                  <div key={product.id} role="listItem" className="menu-item transform-shift">
+                                    <Link to={`/product/detail/`} state={{product_id: product.id}} className="item-product">
+                                          <div className='img-wrap'>
+                                            <img className='img-item' src={src +product.thumbnail} alt={product.title} />
+                                            <div className={`img-unavailable-item ${(product.quantity === 0 || product.deleted === 1) ? '' : 'disNone'}`}>Unavailable</div>
+                                          </div>
+                                          <div className='title-name-type'>
+                                              <h3 className='name-title'>{product.title}</h3>
+                                          </div>
+                                      </Link>
+                                  </div>
                                 ))}
                                 
                             </div>

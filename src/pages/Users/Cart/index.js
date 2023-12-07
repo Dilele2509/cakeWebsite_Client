@@ -4,8 +4,10 @@ import {RiDeleteBinLine} from 'react-icons/ri'
 import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import axios from '../../../API/axios'; // Import your Axios instance
+import eventEmitter from '../util/EventEmitter'
 
 function Cart() {
+    const src = 'http://localhost:3001/';
     const config = {
         headers: {
           "Content-Type": "application/json"
@@ -35,6 +37,16 @@ function Cart() {
             // Cập nhật danh sách sản phẩm bằng cách loại bỏ sản phẩm đã xóa
             const updatedcartItem = cartItem.filter(item => item.id !== id);
             setCartItem(updatedcartItem);
+
+            axios.get('/order-detail/id/', config)
+            .then((res) => {
+              const cartLength = res.data.length;
+              // Emit an event with the updated cart length
+              eventEmitter.emit('updateCartLength', cartLength);
+            })
+            .catch((error) => {
+              console.error('Error fetching cart items:', error);
+            });
         })
         .catch((error) => {
             console.error('Error deleting product:', error);
@@ -129,12 +141,12 @@ function Cart() {
                                             <td className="cart-product">
                                                 <Link to={`/product/detail/${item.product_id}`} className="cart-pro-item">
                                                     <div className="cart-pro-img">
-                                                        <img src={item.thumbnail} alt="product img"></img>
+                                                        <img src={src+item.thumbnail} alt="product img"></img>
                                                     </div>
                                                     <div className="cart-pro-info">
                                                         <h3 className="cart-pro-title">{item.title}</h3>
                                                         <p className="cart-pro-size">{item.product_size}</p>
-                                                        <p className="cart-pro-unit-price">${item.price}</p>
+                                                        <p className="cart-pro-unit-price">{item.price} VND</p>
                                                     </div>
                                                 </Link>
                                             </td>
@@ -152,7 +164,7 @@ function Cart() {
                                                 </div>
                                             </td>
                                             <td className="cart-price">
-                                                <h4 className="line-price"><div>${item.total}</div></h4>
+                                                <h4 className="line-price"><div>{item.total} VND</div></h4>
                                             </td>
                                             <td className="cart-delete">
                                                 <div className="del-icon" onClick={() => handleDeleteProduct(item.id)}>
@@ -173,10 +185,9 @@ function Cart() {
                                     <div className='total-cart'>
                                         <div className='subtotal'>
                                             Total:
-                                            <b>${totalHere}</b>
+                                            <b>{totalHere} VND</b>
                                         </div>
                                         <div className='next-checkout'>
-
                                             <Link to='/check-out' state={{note: noteValue, total: totalHere}}>Checkout</Link>
                                         </div>
                                     </div>

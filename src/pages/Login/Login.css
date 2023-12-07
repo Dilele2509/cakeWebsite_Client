@@ -123,3 +123,14 @@
 .signUp-container a:hover{
     color: #eee;
 }  
+
+.des-reset-pass{
+    text-align: center;
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.mb-1{
+    margin-bottom: 1rem !important;
+}

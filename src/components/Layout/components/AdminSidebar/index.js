@@ -2,6 +2,7 @@ import './AdminSidebar.css'
 import '../Header/Header.css';
 
 import { IoMdClose } from "react-icons/io";
+import { HiMenu } from "react-icons/hi";
 
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -9,20 +10,20 @@ import axios from '../../../../API/axios'
 
 function AdminSidebar() {
     const [activeLink, setActiveLink] = useState('/');
+    const [sidebarOpen, setSidebarOpen] = useState(false); // Thêm state để theo dõi trạng thái sidebar
+    const [showButton, setShowButton] = useState(true);
     const config = {
         headers: {
-          "Content-Type": "application/json"
-          },
-          withCredentials: true
+            "Content-Type": "application/json"
+        },
+        withCredentials: true
     }
 
     const handleChangePage = (to) => {
         setActiveLink(to);
     };
 
-    //logout
-    const navigate = useNavigate();
-    const handleLogout = async ()=>{
+    const handleLogout = async () => {
         try {
             const response = await axios.get('/logout', config);
             console.log(response);
@@ -31,10 +32,34 @@ function AdminSidebar() {
             console.log(error.message);
         }
     }
-    return ( 
+
+    const handleOpenSidebar = () => {
+        setSidebarOpen(true);
+        setShowButton(true);
+        const asideContainer = document.querySelector('.aside-container');
+        if (asideContainer) {
+            asideContainer.classList.remove('close-admin-sidebar');
+        }
+    }
+
+    const handleCloseSidebar = () => {
+        setSidebarOpen(false);
+        setShowButton(false);
+        const asideContainer = document.querySelector('.aside-container');
+        if (asideContainer) {
+            asideContainer.classList.add('close-admin-sidebar');
+        }
+    }
+
+    return (
         <>
-            <aside className="aside-container">
-                <IoMdClose className='admin-sidebar-close'/>
+            {(!sidebarOpen) && ( 
+                <button className={`show-sidebar-button ${showButton ? '' : 'close'}`} onClick={handleOpenSidebar}>
+                        <HiMenu className="open-sidebar-btn" />
+                </button>
+            )}
+            <aside className={`aside-container`}>
+                <IoMdClose className='admin-sidebar-close' onClick={handleCloseSidebar}/>
                 <div className='admin-sidebar-header'>
                     <div className="sidebar-logo">
                         <a href="/">

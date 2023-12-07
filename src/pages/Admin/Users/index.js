@@ -4,6 +4,7 @@ import './User.css'; // Import CSS file
 import { FaPowerOff } from "react-icons/fa6";
 
 function Users() {
+  const src = 'http://localhost:3001/';
   const config = {
     headers: {
       "Content-Type": "application/json"
@@ -74,7 +75,6 @@ function Users() {
         email: userData.email || undefined,
         phone_num: userData.phone_num || undefined,
         gender: userData.gender || undefined,
-        dob: userData.dob || undefined,
         address: userData.address || undefined
       };
 
@@ -167,8 +167,8 @@ function Users() {
                         </td>
                         <td>
                           <div className='td-contain-info'>
-                            <div className='user-img-list'>
-                              <img src={user.avatar} alt='user-img' />
+                            <div className='user-img-list admin-img-list'>
+                              <img src={src+user.avatar} alt='user-img' />
                             </div>
                             <div className='user-info-list'>
                               {editingUserId === user.id ? (

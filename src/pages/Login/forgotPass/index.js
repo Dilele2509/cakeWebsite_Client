@@ -1,17 +1,14 @@
-import './Login.css';
-import '../SignUp/SignUp.css';
+import '../../SignUp/SignUp.css';
+import '../../Login/Login.css'
 import React, { useState, useEffect } from 'react';
-import {MdOutlineAlternateEmail} from 'react-icons/md'
 import {BsFillLockFill} from 'react-icons/bs'
 import {PiWarningCircleFill} from 'react-icons/pi';
 import {FaBug} from 'react-icons/fa';
 import {AiOutlineClose} from 'react-icons/ai';
 import { GoHomeFill } from "react-icons/go";
 
-import axios from '../../API/axios';
+import axios from '../../../API/axios';
 import { Link, useNavigate } from 'react-router-dom';
-import Cookies from 'js-cookie';
-
 
 const Toasts = ({ id, header, message, type, duration, removeToast }) => {
   useEffect(() => {
@@ -60,8 +57,9 @@ const ToastContainer = ({ toasts, removeToast }) => (
   </div>
 );
 
-function LoginPage() {
+function ForgotPass() {
     const [toasts, setToasts] = useState([]);
+    const navigate = useNavigate();
     const config = {
       headers: {
         "Content-Type": "application/json"
@@ -103,94 +101,46 @@ function LoginPage() {
       }
     }, [toasts]);
 
-    const handleLogin = async () => {
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-  
+    const handleCreateNewPass = async () => {
+      const code = document.getElementById('confirmCode').value;
       try {
         //check rỗng
-        if(email ==='' ||password===''){
+        if(code ===''){
             showToast('warning', 'Need to fill them all out');
             return;
         }
-
-        //gọi API login từ backend
-        const response = await axios.post('/login', { email: email, password: password },config);
-        
-        //xử lí phản hồi từ API
-        if(response.data.status !== 'Error'){
-            const userInfo = response.data[0];
-            // Redirect to home page
-            if(userInfo.deleted !== 1){
-              console.log('login successful');
-              window.location.href = '/';
-            }else{
-              showToast('error', 'Your account has been disabled')
-            }
-        }else if(response.data.problem === 'Email'){
-            console.error('Registration failed:', response.data.message);
-            showToast('error', response.data.message);
-        }else if(response.data.problem === 'Password'){
-            console.error('Registration failed:', response.data.message);
-            showToast('error', response.data.message);
-        }else {
-            console.error('Registration failed:', response.data.message);
-            showToast('error', response.data.message);
+        const response = await axios.post('/login/check-code', { inputCode: code },config);
+        console.log(response.data);
+        if(response.data.status === 'Error'){
+            showToast('error', 'Incorrect Confirm Code')
+        }else{
+            navigate('/reset-pass')
         }
       } catch (error) {
         // Handle login error, show error message, etc.
         console.error('Login failed:', error);
       }
     };
-
-    //forgot pass
-    const navigate = useNavigate()
-    const handleForgot = () =>{
-      const email = document.getElementById('email').value;
-      if(email === ''){
-        showToast('warning', 'please fill in your email then try again')
-      }else{
-        axios.post('/login/forgot-sendmail', {
-          to: email
-        }, config)
-        .then((response)=>{
-          Cookies.set('email', email);
-          console.log('response: ',response);
-          navigate('/forgot-pass')
-        })
-      }
-    }
+    
     return ( 
         <>
         <Link to='/' className='back-home-page'><GoHomeFill/></Link>
         <form className="login-form-main" action="">
-            <p className="login-heading">Login</p>
+            <p className="login-heading">Enter Confirming Code</p>
+            <span className='des-reset-pass'>Please check your email and enter the confirmation code provided to reset your password</span>
             <div className="log-input-contain">
-                <MdOutlineAlternateEmail className='log-input-icon'/>
+                <BsFillLockFill className='log-input-icon'/>
                 <input
-                    placeholder="Your Email"
-                    id="email"
-                    className="log-input-field"
-                    type="text"
-                ></input>
-            </div>
-            
-        <div className="log-input-contain">
-            <BsFillLockFill className='log-input-icon'/>
-            <input
-                    placeholder="Your Password"
-                    id="password"
-                    className="log-input-field"
-                    type="password"
-                ></input>
-        </div>
-        <div className="signUp-container mb-1">
-          <a onClick={handleForgot}>Forgot your password?</a>
-        </div>                    
+                        placeholder="Confirming code"
+                        id="confirmCode"
+                        className="log-input-field"
+                        type="number"
+                    ></input>
+            </div>                   
                 
-            <button type='button' id="login-button" onClick={handleLogin}>Submit</button>
+            <button type='button' id="login-button" onClick={handleCreateNewPass}>Submit</button>
             <div className="signUp-container">
-                <a href='/sign-up'>Don't have any account?</a>
+                <a href='/login'>Back to login</a>
             </div>
         </form>
         <ToastContainer toasts={toasts} removeToast={removeToast} />
@@ -198,4 +148,4 @@ function LoginPage() {
      );
 }
 
-export default LoginPage;
+export default ForgotPass;

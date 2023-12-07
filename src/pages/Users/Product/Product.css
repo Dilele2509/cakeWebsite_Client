@@ -64,6 +64,24 @@
     border-radius: 8px;
 }
 
+.img-unavailable-item{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, .55);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: 500
+}
+
+.img-unavailable-item.disNone{
+    display: none;
+}
+
 .title-name-type{
     color: #395542;
     flex-direction: column;

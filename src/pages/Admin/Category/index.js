@@ -103,7 +103,7 @@ function Category() {
                     <th>ID</th>
                     <th>Category</th>
                     <th></th>
-                    <th></th>
+                    {/* <th></th> */}
                   </tr>
                 </thead>
                 <tbody>
@@ -139,14 +139,14 @@ function Category() {
                             <button className='edit-list-btn' onClick={() => handleEditClick(cat.id, cat)}>Edit</button>
                           )}
                         </td>
-                        <td>
+                        {/* <td>
                           <div
                             className='switch-icon disable-check'
                             onClick={() => handleDelCat(cat.id, cat)}
                           >
                             <RiDeleteBinLine />
                           </div>
-                        </td>
+                        </td> */}
                       </tr>
                   ))}
                 </tbody>
