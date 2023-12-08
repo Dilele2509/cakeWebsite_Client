@@ -8,7 +8,7 @@ import eventEmitter from '../util/EventEmitter'
 import { error } from 'jquery';
 
 function Cart() {
-    const src = 'http://localhost:3001/';
+    const src = 'http://cakeshop.gun.vn:3001/';
     const config = {
         headers: {
           "Content-Type": "application/json"

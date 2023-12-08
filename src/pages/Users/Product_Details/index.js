@@ -62,7 +62,7 @@ const ToastContainer = ({ toasts, removeToast }) => (
 );
 
 function Product_Details() {
-  const src = 'http://localhost:3001/';
+  const src = 'http://cakeshop.gun.vn:3001/';
   const config = {
     headers: {
       'Content-Type': 'application/json',

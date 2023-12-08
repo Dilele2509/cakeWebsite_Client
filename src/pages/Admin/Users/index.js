@@ -4,7 +4,7 @@ import './User.css'; // Import CSS file
 import { FaPowerOff } from "react-icons/fa6";
 
 function Users() {
-  const src = 'http://localhost:3001/';
+  const src = 'http://cakeshop.gun.vn:3001/';
   const config = {
     headers: {
       "Content-Type": "application/json"
