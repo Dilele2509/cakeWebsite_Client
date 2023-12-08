@@ -120,15 +120,6 @@ function SignUp() {
       console.error('Registration failed:', error);
     }
   };
-  useEffect(() => {
-    const timerId = setTimeout(() => {
-    removeToast(toasts[0].id); 
-    }, toasts.length > 0 ? toasts[0].duration : 0);
-
-    return () => {
-    clearTimeout(timerId);
-    };
-}, [toasts]);
 
   return (
     <>

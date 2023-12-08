@@ -14,7 +14,7 @@ import eventEmitter from '../../../../pages/Users/util/EventEmitter';
 import { Link } from 'react-router-dom';
 
 function Header() {
-  const src = 'http://localhost:3001/';
+  const src = 'http://cakeshop.gun.vn:3001/';
   const [userAvatar, setUserAvatar] = useState(null);
   const [cartLength, setCartLength] = useState(0);
   const [searchResult, setSearchResult] = useState([]);

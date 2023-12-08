@@ -7,7 +7,7 @@ import { FaPowerOff, FaUsers, FaCube,  FaClipboardList} from 'react-icons/fa6';
 import { IoAdd } from "react-icons/io5";
 
 function AdminHome() {
-    const src = 'http://localhost:3001/';
+    const src = 'http://cakeshop.gun.vn:3001/';
     const config = {
         headers: {
           "Content-Type": "application/json"

@@ -12,7 +12,6 @@ function ChangeInfo() {
         email: '',
         phone_num: '',
         gender: '', 
-        dob: '',
         address: ''
     });
 
@@ -32,7 +31,6 @@ function ChangeInfo() {
                 setUserData({
                     ...user,
                     gender: user.gender || '',
-                    dob: user.dob || '',
                 });
 
                 setSelectedGender(user.gender || '');
@@ -62,7 +60,6 @@ function ChangeInfo() {
                 email: userData.email || undefined,
                 phone_num: userData.phone_num || undefined,
                 gender: selectedGender || undefined,
-                dob: userData.dob || undefined,
                 address: userData.address || undefined
             };
 
@@ -162,16 +159,6 @@ function ChangeInfo() {
                                 </label>
                             </div>
                         </div>
-                    </div>
-                    <div className="edit-input-contain">
-                        <span>Date of Birth</span>
-                        <input
-                            id="dob"
-                            className="edit-user-dob"
-                            type="date"
-                            value={userData.dob || ''}
-                            onChange={handleInputChange}
-                        />
                     </div>
                     <div className="edit-input-contain">
                         <span>Address</span>

@@ -7,7 +7,7 @@ import axios from '../../../API/axios'; // Import your Axios instance
 import eventEmitter from '../util/EventEmitter'
 
 function Cart() {
-    const src = 'http://localhost:3001/';
+    const src = 'http://cakeshop.gun.vn:3001/';
     const config = {
         headers: {
           "Content-Type": "application/json"

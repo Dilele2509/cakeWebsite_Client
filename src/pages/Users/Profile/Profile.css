@@ -204,7 +204,7 @@ input[type='file']{
   z-index: 1111;
 }
 
-.cancel{
+.cancel-mod{
   background-color: #ff4141;
   margin-left: 1rem;
 }

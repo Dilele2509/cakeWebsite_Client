@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 
 
 function Product() {
-  const src = 'http://localhost:3001/';
+  const src = 'http://cakeshop.gun.vn:3001/';
   const [products, getProducts] = useState([]);
    // Get catId from URL
   const { cat } = useParams();

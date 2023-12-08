@@ -7,7 +7,7 @@ import { IoAdd } from "react-icons/io5";
 import { MdOutlineFileUpload } from "react-icons/md";
 
 function Product() {
-    const src = 'http://localhost:3001/';
+    const src = 'http://cakeshop.gun.vn:3001/';
     const config = {
         headers: {
             'Content-Type': 'application/json',

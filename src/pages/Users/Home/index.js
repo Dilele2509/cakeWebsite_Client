@@ -46,8 +46,7 @@ function Home() {
                 <div className='main-container'>
                     <div className='describe-content'>
                         <p className='content-paragraph'>
-                            Ở UrBakery sẽ có một vài mặt hàng chính, trong đó nổi bật là phân khúc bánh thiết kế.
-                            Đối với sản phẩm này các bạn có thể tự thiết kế các mẫu bánh yêu thích của riêng mình.
+                            UrBakery sẽ cung cấp cho bạn những mặt hàng chính như ở dưới này nè, tụi tui bán bánh các loại cụ thể là 3 loại ở duới nhe. 
                         </p>
                     </div>
                 </div>

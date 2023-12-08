@@ -11,7 +11,7 @@ function Profile() {
     const [userAva, setUserAva] = useState();
     const [uploadAvailable, setUploadAvailable] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null); //use for contain img file
-    const src = 'http://localhost:3001/'
+    const src = 'http://cakeshop.gun.vn:3001/'
     const config = {
         headers: {
           "Content-Type": "application/json"
@@ -102,7 +102,7 @@ function Profile() {
                                             <input id='file-upload' type="file" accept=".png, .jpg, .jpeg" onChange={fileSelectedHandler} />
                                         </div>
                                         <button className='change-ava-btn' onClick={fileUploadHandler}>Upload</button>
-                                        <button className='change-ava-btn cancel' onClick={handleCancelUpload}>Cancel</button>
+                                        <button className='change-ava-btn cancel-mod' onClick={handleCancelUpload}>Cancel</button>
                                     </div>
                                 </>
                             ):(
