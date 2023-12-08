@@ -57,7 +57,7 @@ const ToastContainer = ({ toasts, removeToast }) => (
 
 
 function OrderDetail() {
-    const src = 'http://cakeshop.gun.vn:3001/';
+    const src = 'http://localhost:3001/';
     const config = {
         headers: {
           "Content-Type": "application/json"
@@ -282,7 +282,7 @@ function OrderDetail() {
                                             <div className='od-date'>
                                                 <div className='od-date-info'>
                                                     <b>Receiver: </b>
-                                                    <span>{userName}</span>
+                                                    <span>{orderInfo.receiver}</span>
                                                 </div>
                                                 <div className='od-date-info'>
                                                     <b>Receiver Phone: </b>

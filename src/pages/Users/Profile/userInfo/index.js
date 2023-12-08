@@ -11,7 +11,7 @@ function Profile() {
     const [userAva, setUserAva] = useState();
     const [uploadAvailable, setUploadAvailable] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null); //use for contain img file
-    const src = 'http://cakeshop.gun.vn:3001/'
+    const src = 'http://localhost:3001/'
     const config = {
         headers: {
           "Content-Type": "application/json"

@@ -5,9 +5,10 @@ import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import axios from '../../../API/axios'; // Import your Axios instance
 import eventEmitter from '../util/EventEmitter'
+import { error } from 'jquery';
 
 function Cart() {
-    const src = 'http://cakeshop.gun.vn:3001/';
+    const src = 'http://localhost:3001/';
     const config = {
         headers: {
           "Content-Type": "application/json"
@@ -20,21 +21,34 @@ function Cart() {
         // Gọi API để lấy danh sách sản phẩm trong giỏ hàng và gán vào cartItem
         axios.get('/order-detail/id/', config)
             .then((response) => {
-                setCartItem(response.data);
+                let cart = response.data;
+                // Filter out items with deleted flag or zero quantity
+                const updatedCart = cart.filter((item) => !(item.deleted === 1 || item.quantity === 0));
+                cart.forEach((item) => {
+                    if (item.deleted === 1 || item.quantity === 0) {
+                        const id = item.id;
+                        axios.delete('/order-detail/', { data: { id: id } })
+                            .catch((error) => {
+                                console.log(error.message);
+                            });
+                    }
+                });
+                // Update the state with the filtered cart
+                setCartItem(updatedCart);
             })
             .catch((error) => {
                 console.error('Error fetching cart items:', error);
             });
     }, []);
+    
 
     // Hàm xóa sản phẩm và cập nhật danh sách
     const handleDeleteProduct = (id) => {
-        // Gọi API để xóa sản phẩm dựa trên item.id
         axios.delete('/order-detail/', { data: { id } })
         .then((response) => {
             console.log('Product deleted successfully:', response.data);
 
-            // Cập nhật danh sách sản phẩm bằng cách loại bỏ sản phẩm đã xóa
+            // update list after remove 
             const updatedcartItem = cartItem.filter(item => item.id !== id);
             setCartItem(updatedcartItem);
 

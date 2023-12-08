@@ -61,7 +61,7 @@ const ToastContainer = ({ toasts, removeToast }) => (
 );
 
 function Checkout() {
-    const src = 'http://cakeshop.gun.vn:3001/';
+    const src = 'http://localhost:3001/';
     const config = {
         headers: {
             'Content-Type': 'application/json',
@@ -205,7 +205,7 @@ function Checkout() {
     }
     useEffect(() => {
         const calculateTransportFee = async () => {
-            if (cityAddress.city !== '' && cityAddress.district !== '' && cityAddress.ward !== '') {
+            if (cityAddress.city !== '' && cityAddress.district !== '' && cityAddress.ward !== '' && payMethod !== '') {
                 try {
                     const response = await axios.get(
                         'https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee',
@@ -243,12 +243,13 @@ function Checkout() {
         }else{
             {const deliAddress = `${userData.address}, ${cityAddress.ward}, ${cityAddress.district}, ${cityAddress.city}`;
             const response = await axios.post('/order/add/', {
-              receiver_phone: userData.phone_num,
-              note: note,
-              delivery_address: deliAddress,
-              payment_method: payMethod,
-              transport_fee: transportFee,
-              total: totalBill
+                receiver: userData.fullname,
+                receiver_phone: userData.phone_num,
+                note: note,
+                delivery_address: deliAddress,
+                payment_method: payMethod,
+                transport_fee: transportFee,
+                total: totalBill
             }, config);
         
             if (response.data.status === 'Error') {

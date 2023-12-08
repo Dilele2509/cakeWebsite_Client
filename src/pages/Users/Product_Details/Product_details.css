@@ -135,6 +135,13 @@
 .quantity-detail span{
     color: #B31312;
     font-weight: 500;
+    font-size: 1rem;
+}
+
+.quantity-detail.more-quantity-left span{
+    color: #508d69;
+    font-weight: 500;
+    font-size: 1rem;
 }
 
 .func-choosing{

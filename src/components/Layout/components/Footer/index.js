@@ -1,9 +1,56 @@
 /* import css */
+import { useEffect, useState } from 'react';
 import './Footer.css';
+import axios from '../../../../API/axios';
 
 /* import icons */
 import {BsFacebook, BsInstagram} from 'react-icons/bs';
 function Footer() {
+   const config = {
+      headers: {
+        "Content-Type": "application/json"
+        },
+    }
+   const [receiverData, setReceiverData] = useState({
+      name: '',
+      email: ''
+   })
+
+   const handleInputChange = (e) => {
+      const { id, value } = e.target;
+      setReceiverData((prevData) => ({
+        ...prevData,
+        [id]: value,
+      }));
+    };
+
+   const handleSubmit = async (e) => {
+   e.preventDefault();
+
+   if (receiverData.email === '' || receiverData.name === '') {
+      alert('Can not submit, please fill in all your information');
+   } else {
+      try {
+         setReceiverData({
+            name: '',
+            email: ''
+         })
+         await axios.post('/get-newsletter', {
+            to: receiverData.email,
+            name: receiverData.name,
+         }, config)
+         .then((response)=>{
+            alert('Thanks for joining us');
+            console.log(response.data);
+         })
+
+      } catch (error) {
+         console.error('Error submitting newsletter:', error);
+         alert('An error occurred while submitting the newsletter');
+      }
+   }
+   };
+
     return(
         <>
         <footer>
@@ -45,19 +92,21 @@ function Footer() {
                   <div className="col-md-3">
                      <div className="infoma">
                         <h3>Newsletter</h3>
-                        <form className="form_subscri">
-                           <div className="row">
-                              <div className="col-md-12">
-                                 <input className="newsl" placeholder="Your Name" type="text" name="Your Name"/>
+                        <div className="form_subscri">
+                           <form onSubmit={handleSubmit}>
+                              <div className="row">
+                                 <div className="col-md-12">
+                                    <input id='name' className="newsl" placeholder="Your Name" value={receiverData.name} type="text" onChange={handleInputChange} />
+                                 </div>
+                                 <div className="col-md-12">
+                                    <input id='email' className="newsl" placeholder="Email" value={receiverData.email} type="text" onChange={handleInputChange}/>
+                                 </div>
+                                 <div className="col-md-12">
+                                    <button type="submit" className="subsci_btn">Subscribe</button>
+                                 </div>
                               </div>
-                              <div className="col-md-12">
-                                 <input className="newsl" placeholder="Email" type="text" name="Email"/>
-                              </div>
-                              <div className="col-md-12">
-                                 <button className="subsci_btn">Subscribe</button>
-                              </div>
-                           </div>
-                        </form>
+                           </form>
+                        </div>
                      </div>
                   </div>
                </div>

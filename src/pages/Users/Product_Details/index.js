@@ -62,7 +62,7 @@ const ToastContainer = ({ toasts, removeToast }) => (
 );
 
 function Product_Details() {
-  const src = 'http://cakeshop.gun.vn:3001/';
+  const src = 'http://localhost:3001/';
   const config = {
     headers: {
       'Content-Type': 'application/json',
@@ -186,6 +186,8 @@ function Product_Details() {
     try {
       if(product.quantity === 0){
         showToast('error', 'The product is out of stock')
+      } else if(product.deleted === 1){
+        showToast('error', 'This product has been discontinued')
       }else{
         const response = await axios.get('/login/check-status/', config);
         const { status } = response.data;
@@ -264,16 +266,20 @@ function Product_Details() {
             <div className='space-div'></div>
             <h4 className='func-item-price'>{productPrice} VND</h4>
             <div className='detail-content'>
-              {product.quantity > 0 ? (
-                <div className='status-detail'>
-                  Status: Available
-                </div>
-              ) : (
+              {product.quantity < 0 ? (
                 <div className='status-detail'>
                   Status: Sold Out
                 </div>
+              ) : (product.deleted === 1) ?(
+                <div className='status-detail'>
+                  Status: Product discontinued
+                </div>
+              ): (
+                <div className='status-detail'>
+                  Status: Available
+                </div>
               )}
-              <div className='quantity-detail'>
+              <div className={`quantity-detail ${product.quantity < 5 ? '' : 'more-quantity-left'}`}>
                   Quantity in Stock: <span>{product.quantity}</span>
               </div>
               <div className='menu-item-ingredient'>

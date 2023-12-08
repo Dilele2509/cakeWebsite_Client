@@ -57,7 +57,7 @@ const ToastContainer = ({ toasts, removeToast }) => (
 
 
 function AdminProfile() {
-    const src = 'http://cakeshop.gun.vn:3001/'
+    const src = 'http://localhost:3001/'
     const [toasts, setToasts] = useState([]);
     const config = {
         headers: {
